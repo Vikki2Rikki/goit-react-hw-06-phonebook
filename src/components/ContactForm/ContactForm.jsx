@@ -5,7 +5,7 @@ import {
   Input,
   BtnSubmit,
 } from './ContactForm.styled';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addContact } from 'redux/contacts/contactsSlice';
 import { nanoid } from 'nanoid';
 
@@ -14,38 +14,29 @@ const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
+  const { contacts } = useSelector(state => state.contacts);
+
   const handleInput = ({ target: { name, value } }) => {
     if (name === 'name') setName(value);
     if (name === 'number') setNumber(value);
   };
 
-  const handleSubmit = evt => {
-    evt.preventDefault();
-    ///const form = evt.currentTarget;
-    dispatch(
-      addContact({
-        id: nanoid(),
-        name: name,
-        number: number,
-      })
-    );
-    //reset();
+  const addContactHandle = () => {
+    const createContact = {
+      id: nanoid(),
+      name: name,
+      number: number,
+    };
+
+    dispatch(addContact(...createContact));
+    //setName('');
+    //setNumber('');
+    console.log('createContact', addContact(createContact));
   };
-
-  // onSubmit({
-  //   id: nanoid(),
-  //   name: name,
-  //   number: number,
-  // });
-
-  // const reset = () => {
-  //   setName('');
-  //   setNumber('');
-  // };
 
   return (
     <FormContainer>
-      <form className="form" onClick={handleSubmit}>
+      <form className="form" onClick={evt => evt.preventDefault()}>
         <WrapInput>
           <label htmlFor="exampleInputEmail1" className="form-label">
             Name
@@ -74,7 +65,9 @@ const ContactForm = () => {
             required
           />
         </WrapInput>
-        <BtnSubmit type="submit">Add contact</BtnSubmit>
+        <BtnSubmit type="submit" onClick={() => addContactHandle()}>
+          Add contact
+        </BtnSubmit>
       </form>
     </FormContainer>
   );
