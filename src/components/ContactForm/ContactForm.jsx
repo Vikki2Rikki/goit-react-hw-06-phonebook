@@ -28,10 +28,19 @@ const ContactForm = () => {
       number: number,
     };
 
-    dispatch(addContact(...createContact));
-    //setName('');
-    //setNumber('');
-    console.log('createContact', addContact(createContact));
+    if (contacts.some(({ name }) => name === createContact.name)) {
+      alert(`${createContact.name} is already in contacts.`);
+      reset();
+      return;
+    }
+
+    dispatch(addContact(createContact));
+    reset();
+  };
+
+  const reset = () => {
+    setName('');
+    setNumber('');
   };
 
   return (
